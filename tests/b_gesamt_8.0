@@ -1,0 +1,11 @@
+f(a,b)
+	if not(g(a,b) != g(b,a)) goto true;
+	false:
+	return 123;
+	true:
+	return 42;
+end;
+
+g(a,b)
+	return a+b;
+end;

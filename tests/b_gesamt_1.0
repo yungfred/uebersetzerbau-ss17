@@ -1,0 +1,17 @@
+f(a,b)
+	var x = 4;
+	var y = 5;
+	var j = 5 + cool(a+a,a*a,b+b,b*b);
+	(* (16 + 54) + 5 = 75 *)
+	var k = cool(dup(x), dup(y), dup(x), dup(y));
+	(* 2*80 = 160 *)
+	return j+k;
+end;
+
+cool(a,b,c,d)
+	return (a*b) + (c*d);
+end;
+
+dup(x)
+	return 2*x;
+end;

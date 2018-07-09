@@ -1,0 +1,14 @@
+f(a,b)
+	var x = 4;
+	var y = 5;
+	var j = cool(dup(b));
+	return j;
+end;
+
+cool(a)
+	return a*a;
+end;
+
+dup(x)
+	return 2*x;
+end;

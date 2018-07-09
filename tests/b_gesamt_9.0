@@ -1,0 +1,8 @@
+f(a,b)
+	a = g(a,b);
+	return a+b;
+end;
+
+g(a,b)
+	return a+b;
+end;

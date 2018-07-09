@@ -1,0 +1,11 @@
+f(x,y)
+	return rec(x,y);
+end;
+
+rec(a,b)
+	if not(a != 0) goto fred;
+	return rec(a+(-1), b+1);
+	
+	fred:
+	return b;
+end;

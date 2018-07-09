@@ -1,0 +1,7 @@
+f()
+	return g(1,2,3,4,5,6);
+end;
+
+g(a,b,c,d,e,f)
+	return a+(-b)+c+(-d)+e+(-f);
+end;

@@ -1,0 +1,10 @@
+f(a)
+	(* 2 vars + (5params-1) = 6 *)
+	(* arithmetic ops should not affect expression derivations *)
+	var j = cool(a,a+1,a+1+1,a+1+1+1,1+1+1+1+a);
+	return j;
+end;
+
+cool(a,b,c,d,e)
+	return a+b+c+d+e;
+end;

@@ -1,0 +1,12 @@
+f(a,b)
+	var x = 0;
+	var y = 1;
+	var z = cool(x+88,y+4,5+7,6+9,);
+	var u = 50;
+	return a+b+z+u+x+y;
+end;
+
+cool(a,b,c,d)
+	return (a*b) + (c*d); 
+end;
+

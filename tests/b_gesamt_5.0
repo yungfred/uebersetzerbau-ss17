@@ -1,0 +1,8 @@
+f(a)
+	var j = 2 * (((21 + cool()) * a) + (-a)) * 3;
+	return j;
+end;
+
+cool()
+	return 123 + 456;
+end;

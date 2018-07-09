@@ -1,0 +1,54 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+#include "tree.h"
+
+%}
+
+%start root
+
+%term PLUS=1 MINUS=2 MULT=3 NUMBER=4 ID_READ=5 ARRAY_READ=6 BRACKET=7 MINUSLAST=8 FUNC_CALL=9 ARG=10 SAVE_REG=11
+
+%%
+
+root: node							# 1 # bnode->reg_no = kids[0]->reg_no; printf("\tpushq %s\n", getRegNameToRegNo(bnode->reg_no));
+node: PLUS(node, node)				# 2 # bnode->reg_no = getFreeRegister(); printf("\tmovq %s, %s\n\taddq %s, %s\n", getRegNameToRegNo(kids[0]->reg_no), getRegNameToRegNo(bnode->reg_no), getRegNameToRegNo(kids[1]->reg_no), getRegNameToRegNo(bnode->reg_no));
+node: MULT(node, node)				# 2 # bnode->reg_no = getFreeRegister(); printf("\tmovq %s, %s\n\timul %s, %s\n", getRegNameToRegNo(kids[0]->reg_no), getRegNameToRegNo(bnode->reg_no), getRegNameToRegNo(kids[1]->reg_no), getRegNameToRegNo(bnode->reg_no));
+node: NUMBER						# 1 # bnode->reg_no = getFreeRegister(); printf("\tmovq $%i, %s\n", bnode->number, getRegNameToRegNo(bnode->reg_no));
+node: ID_READ						# 0 # bnode->reg_no = getRegisterNoToVar(bnode->id);
+node: numb							# 1 # bnode->reg_no = getFreeRegister(); printf("\tmovq $%i, %s\n", bnode->number, getRegNameToRegNo(bnode->reg_no));
+numb: PLUS(numb, numb)				# 0 # bnode->number = kids[0]->number + kids[1]->number;
+numb: MULT(numb, numb)				# 0 # bnode->number = kids[0]->number * kids[1]->number;
+numb: NUMBER						# 0 # //nothing
+
+node: bracket						# 0 # //nothing
+bracket: BRACKET(node)				# 0 # bnode->reg_no = kids[0]->reg_no;
+
+node: ARRAY_READ(node, node)		# 2 # bnode->reg_no = getFreeRegister(); printf("\tmovq (%s,%s,8),%s\n\n", getRegNameToRegNo(kids[0]->reg_no), getRegNameToRegNo(kids[1]->reg_no), getRegNameToRegNo(bnode->reg_no));
+node: ARRAY_READ(node, numb)		# 1 # bnode->reg_no = getFreeRegister(); printf("\tmovq %i(,%s,1),%s\n", (kids[1]->number)*8, getRegNameToRegNo(kids[0]->reg_no), getRegNameToRegNo(bnode->reg_no));
+node: ARRAY_READ(numb, node)		# 1 # bnode->reg_no = getFreeRegister(); printf("\tmovq %i(,%s,8),%s\n", (kids[0]->number), getRegNameToRegNo(kids[1]->reg_no), getRegNameToRegNo(bnode->reg_no));
+node: minusList						# 1 # bnode->reg_no = kids[0]->reg_no;
+minusList: MINUS(minusList)			# 0 # bnode->reg_no = kids[0]->reg_no; bnode->number = kids[0]->number;
+minusList: MINUSLAST(node)			# 1 # if(bnode->minusCounter%2 == 0){ bnode->reg_no = kids[0]->reg_no; } else { bnode->reg_no = getFreeRegister(); printf("\n\tmovq %s, %s\n\tneg %s\n", getRegNameToRegNo(kids[0]->reg_no), getRegNameToRegNo(bnode->reg_no), getRegNameToRegNo(bnode->reg_no)); }
+
+node: FUNC_CALL(argList)			# 1 # bnode->reg_no = getFreeRegister(); loadPreparedArgumentsFromStack(bnode->argCount); printf("\tcall %s\n", bnode->id); restoreRegisterFromStack(); printf("\tmovq %%rax, %s\n\n", getRegNameToRegNo(bnode->reg_no));
+argList: ARG(argList, node)			# 1 # printf("\tpushq %s\n\n", getRegNameToRegNo(kids[1]->reg_no));
+argList: saveReg			 		# 0 # 
+saveReg: SAVE_REG					# 1 # saveRegisterOnStack();
+
+%%
+
+
+void burm_reduce(NODEPTR_TYPE bnode, int goalnt);
+
+void invoke_burm(NODEPTR_TYPE root) {
+	//printf("starting with labelling\n");
+	if(burm_label(root) == 0){
+		fprintf(stderr, "no cover while labeling -> exiting\n");
+		exit(LABELING_ERROR);
+	}
+	//printf("starting with reducing\n");
+	burm_reduce(root, 1);
+}
+

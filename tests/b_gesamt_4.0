@@ -1,0 +1,37 @@
+f(a)
+	(* var j = 2 * ((3 * cool(a,a+1)) + cool(a,a+1)); *)
+	(*
+	neue ausdruckstiefe: 
+	2 var
+	1 mult außen
+	1 plus innen
+	1 mult innen
+	1 func call arg
+		1 max arg tiefe
+	1 func call arg
+		1 max arg tiefe
+	###
+	gesamt: 9!
+
+
+	erg = 8*cool(a,a+1)
+	ausdruckstiefe: 2 + 1 + 1 + 1 + 1 = 6 
+	*)
+	var j = (3 * cool(a,a+1)) + cool(a,a+1);
+	(* ausdruckstiefe:
+	2 var 
+	1 plus außen
+	1 mult innen
+	1 func call arg
+		1 max arg
+	1 func call arg
+		1 max arg
+	###
+	gesamt: 8
+	*)
+	return j;
+end;
+
+cool(a,b)
+	return 5*(((a+b)*a)+b);
+end;

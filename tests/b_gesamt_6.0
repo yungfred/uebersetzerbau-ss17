@@ -1,0 +1,7 @@
+f(a,b)
+	return sub(sub(a,b),sub(b,a)+4);
+end;
+
+sub(a,b)
+	return a+(-b);
+end;

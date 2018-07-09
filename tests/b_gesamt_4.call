@@ -1,0 +1,4 @@
+extern long f(long);
+
+printf("erg: %ld\n",f(6)); 
+RET(f(6) == 1700);

@@ -1,0 +1,4 @@
+extern long f(long,long);
+
+printf("asdf: %i \n", f(2,3));
+RET(f(2,3) == 235);
